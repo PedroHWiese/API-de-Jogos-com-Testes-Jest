@@ -1,0 +1,12 @@
+
+F - fazer backend
+F - Conectar servidro flask ao sql
+F - Fazer CRUD simples
+F- Post Man
+
+F - instalar Jest
+AF - Testes do Jest
+
+
+
+

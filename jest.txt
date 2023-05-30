@@ -1,0 +1,79 @@
+const axios = require('axios');
+
+//Testando o método adicionar tarefa
+
+test('POST -> Cria uma tarefa com o título "Correr" ', async ()=>{
+    //Preparar o cenário
+    let task = {
+        title:"Correr",
+        description: "Vou Sair correr ás 15:00h"
+    }
+
+    //Execução
+    const response =
+    await axios.post('http://localhost:5000/tasks/add', task);
+
+    //Verificações
+    expect(response.status).toBe(201);
+    expect(response.data).toHaveProperty('message','Tarefa Correr criada com sucesso');
+
+});
+
+test('POST -> Criar uma tarefa sem título', async () =>{
+    let task = {
+        title: "",
+        description:"descrição teste"
+    }
+
+
+    await axios.post('http://localhost:5000/add/', task).catch(
+        function(error){
+            if (error.response){
+                expect(error.response.status).toBe(422);
+                expect(error.response.data).toHaveProperty
+                ('message','Faltou informar o título');
+
+            }
+        });
+
+});
+
+//Testando o listar todas as tarefas
+test('GET->Método "Todas as tarefas" está funcionando ?', async()=>{
+    const response = await axios('http://localhost:5000');
+
+    expect(response.status).toBe(200);
+
+
+
+});
+
+test('GET->Método "Todas as tarefas" está retornando algum resultado ?', async()=>{
+    const response = await axios('http://localhost:5000');
+
+    expect(response.data).toBeTruthy();
+
+    
+});
+
+test('GET->Método "Todas as tarefas" a última tarefa possui o título Correr ?', async()=>{
+    const response = await axios('http://localhost:5000');
+
+    let ultima_tarefa = response.data.tasks.length-1;
+
+    expect(response.data.tasks[ultima_tarefa]).toHaveProperty('title','Correr');
+
+});
+
+
+//Testa o método Update GET
+
+test('GET->Método update retorna os dados da tarefa Correr ?', async()=>{
+    const response = await axios('http://localhost:5000/tasks/edit/5');
+
+    
+    expect(response.data.task).toHaveProperty('id','5');
+    expect(response.data.task).toHaveProperty('title','Correr');
+    expect(response.data.task.description).toMatch(/15:00/);
+
+});
