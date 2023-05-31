@@ -1,32 +1,52 @@
+//instalar o nodeJS
+
+//npm install axios
+//npm install jest
 const axios = require('axios');
 
 
-
 //----------------------------------------------------------------------------------------------------------
-test('POST -> Método "Cria um jogo com o nome GTA" ', async ()=>{
+/*
+Aqui nesse arquivo estão escritos dos 10 testes do jest (linguagem javascripts) que vão rodar
+usando as rotas da API como base e passando atributos e testando as respostas que vamos obter
+por isso retornar os status de sucesso e erro assim como uma mensagem escrita são importantes
+*/
+//----------------------------------------------------------------------------------------------------------
+
+//nome do teste que vai ser feito
+test('POST -> Método "Cria um jogo com o nome Quake" ', async ()=>{
+     
     //Preparar o cenário
     let jogo = 
     {
-        "nome_jogo": "GTA",
-        "plataforma_jogo": "PS2"
+        "nome_jogo": "Quake", 
+        "plataforma_jogo": "PS1"
     }
 
+    //o que ocorre aqui é a reponse sendo um teste de post na rota abaixo usando os parâmetros
+    //passados acima no método (o parâmetro é passado com a sintaxe do json)
     const response =
     await axios.post('http://localhost:5000/jogos', jogo);
+
+    //a reposta esperada por esse teste deve ser um status 201 com uma mensagem dentro do json
     expect(response.status).toBe(201);
-    expect(response.data).toHaveProperty('message','Jogo GTA criado com sucesso');
+    expect(response.data).toHaveProperty('message','Jogo Quake criado com sucesso');
 
 });
 
 //----------------------------------------------------------------------------------------------------------
+
+
 test('POST -> Método "Cria um jogo com nome de caracteres além do limite" ', async ()=>{
-    //Preparar o cenário
+
     let jogo = 
     {
         "nome_jogo": "XD".repeat(46),
         "plataforma_jogo": "PS2"
     }
 
+    //essa parte do código faz um teste de erro
+    //usando o axious, isso é para fazer um catch do erro de status que o teste vai passar
     await axios.post('http://localhost:5000/jogos', jogo).catch(
         function(error){
             if (error.response){
@@ -39,6 +59,8 @@ test('POST -> Método "Cria um jogo com nome de caracteres além do limite" ', a
 });
 
 //----------------------------------------------------------------------------------------------------------
+
+
 test('POST ->Método "Criar um jogo sem nome', async () =>{
     let jogo = {
         nome_jogo: "",
@@ -55,6 +77,7 @@ test('POST ->Método "Criar um jogo sem nome', async () =>{
 
 });
 
+
 //----------------------------------------------------------------------------------------------------------
 
 test('GET->Método "Todos os jogos do banco estão sendo listados ?', async()=>{
@@ -66,7 +89,7 @@ test('GET->Método "Todos os jogos do banco estão sendo listados ?', async()=>{
 
 //----------------------------------------------------------------------------------------------------------
 test('GET->Método "Lista um jogo com Id específico" ', async()=>{
-    const id_jogo = 6;
+    const id_jogo = 4;
     const response = await axios.get(`http://localhost:5000/jogos/${id_jogo}`);
     expect(response.data.jogo).toHaveProperty('id_jogo',id_jogo);
 
@@ -88,7 +111,7 @@ test('GET->Método "Tenta listar um jogo que não existe" ', async()=>{
 
 //----------------------------------------------------------------------------------------------------------
 test('DELETE-> Método deve deletar e retornar a mensagem de exclusão do jogo', async () => {
-    const id_jogo = 1000;
+    const id_jogo = 4;
     const response = await axios.delete(`http://localhost:5000/jogos/${id_jogo}`);
     
     expect(response.status).toBe(200);
@@ -113,7 +136,7 @@ test('DELETE-> Método "Deletar um jogo que não existe no banco de dados', asyn
 //----------------------------------------------------------------------------------------------------------
 
 test('PUT-> Método "Edita o nome de um jogo para RE4" ', async ()=>{
-    const id_jogo = 6;
+    const id_jogo = 1;
     let jogo = 
     {
         "nome_jogo": "RE4",
@@ -130,7 +153,7 @@ test('PUT-> Método "Edita o nome de um jogo para RE4" ', async ()=>{
 //----------------------------------------------------------------------------------------------------------
 
 test('PUT-> Método "Edita a plataforma de um jogo para PC" ', async ()=>{
-    const id_jogo = 6;
+    const id_jogo = 1;
     let jogo = 
     {
         "plataforma_jogo": "PC",
@@ -145,3 +168,4 @@ test('PUT-> Método "Edita a plataforma de um jogo para PC" ', async ()=>{
 });
 
 //----------------------------------------------------------------------------------------------------------
+
